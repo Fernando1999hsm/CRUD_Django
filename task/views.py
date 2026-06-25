@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponse
@@ -45,7 +45,9 @@ def signout(request):
 
 def signin(request):
     if request.method == 'GET':
-        return render(request, 'signin.html')
+        return render(request, 'signin.html', {
+            'form': AuthenticationForm()
+        })
     else:
         user = authenticate(
             request,
@@ -54,6 +56,7 @@ def signin(request):
         )
         if user is None:
             return render(request, 'signin.html', {
+                'form': AuthenticationForm(),
                 "error": "Nombre de usuario o contraseña incorrectos"
             })
         else:
