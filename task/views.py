@@ -5,6 +5,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponse
 from django.db import IntegrityError
 from .forms import TaskForm
+from .models import Task
 
 # Create your views here.
 def home(request):
@@ -38,7 +39,8 @@ def signup(request):
             })
         
 def task(request):
-    return render(request, 'task.html')
+    tasks = Task.objects.filter(user=request.user)
+    return render(request, 'task.html', {'tasks': tasks})
 
 def create_task(request):
     if request.method == 'GET':
