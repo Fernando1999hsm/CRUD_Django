@@ -1,6 +1,45 @@
 {% extends 'base.html' %}
 
+{% block title %}Home{% endblock %}
+
 {% block content %}
-    <h1>Home</h1>
-    <p>Welcome to the Django CRUD Application!</p>
+<section class="hero-section">
+    <div class="container text-center">
+        <h1>Welcome to Django CRUD</h1>
+        <p class="lead mb-4">Manage your tasks efficiently with our simple task management application.</p>
+        <div>
+            <a href="/signup" class="btn btn-light btn-lg me-2">Get Started</a>
+            <a href="/task" class="btn btn-outline-light btn-lg">View Tasks</a>
+        </div>
+    </div>
+</section>
+
+<div class="container mt-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Create Tasks</h5>
+                    <p class="card-text">Easily create and organize your tasks with titles, descriptions, and priority levels.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Track Progress</h5>
+                    <p class="card-text">Keep track of your tasks and mark them as complete when you're done.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Stay Organized</h5>
+                    <p class="card-text">Prioritize your work and never miss an important deadline again.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

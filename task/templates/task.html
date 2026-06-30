@@ -1,12 +1,41 @@
 {% extends 'base.html' %}
 
+{% block title %}Tasks{% endblock %}
+
 {% block content %}
-    <h1>Task</h1>
-    {% for task in tasks %}
-        <li>
-            <h4>{{ task.title }}</h4>
-            <p>{{ task.description }}</p>
-            <p>Priority: {{ task.priority }}</p>
-        </li>
-    {% endfor %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Tasks</h1>
+        <a href="/task/create" class="btn btn-primary">+ New Task</a>
+    </div>
+
+    {% if tasks %}
+        <div class="row g-3">
+            {% for task in tasks %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card task-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">{{ task.title }}</h5>
+                                {% if task.priority == 2 %}
+                                    <span class="badge bg-danger priority-badge">High</span>
+                                {% elif task.priority == 1 %}
+                                    <span class="badge bg-warning text-dark priority-badge">Medium</span>
+                                {% else %}
+                                    <span class="badge bg-success priority-badge">Low</span>
+                                {% endif %}
+                            </div>
+                            <p class="card-text">{{ task.description|default:"No description" }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <p class="text-muted mb-3">No tasks yet. Create your first task!</p>
+            <a href="/task/create" class="btn btn-primary">Create Task</a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
