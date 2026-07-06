@@ -40,7 +40,8 @@ def signup(request):
         
 def task(request):
     tasks = Task.objects.filter(user=request.user, date_completed__isnull=True)
-    return render(request, 'task.html', {'tasks': tasks})
+    tasks_completed = Task.objects.filter(user=request.user, date_completed__isnull=False).order_by('-date_completed')
+    return render(request, 'task.html', {'tasks': tasks, 'tasks_completed': tasks_completed})
 
 def create_task(request):
     if request.method == 'GET':
@@ -107,5 +108,11 @@ def complete_task(request, task_id):
         else:
             task.date_completed = timezone.now()
         task.save()
+    return redirect('task')
+
+def delete_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id, user=request.user)
+    if request.method == 'POST':
+        task.delete()
     return redirect('task')
 

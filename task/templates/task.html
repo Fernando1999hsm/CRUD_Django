@@ -27,16 +27,6 @@
                             </div>
                             <p class="card-text">{{ task.description|default:"No description" }}</p>
                             <p class="card-text"><small class="text-muted">Created on: {{ task.date_created|date:"M d, Y" }}</small></p>
-                            {% if task.date_completed %}
-                                <p class="card-text"><small class="text-muted">Completed on: {{ task.date_completed|date:"M d, Y" }}</small></p>
-                            {% else %}
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="completeTask{{ task.id }}" data-task-id="{{ task.id }}">
-                                    <label class="form-check-label" for="completeTask{{ task.id }}">
-                                        Mark as complete
-                                    </label>
-                                </div>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -44,8 +34,42 @@
         </div>
     {% else %}
         <div class="text-center py-5">
-            <p class="text-muted mb-3">No tasks yet. Create your first task!</p>
-            <a href="/task/create" class="btn btn-primary">Create Task</a>
+            <p class="text-muted mb-3">No pending tasks.</p>
+        </div>
+    {% endif %}
+
+    <hr class="my-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Tasks Completed</h2>
+    </div>
+
+    {% if tasks_completed %}
+        <div class="row g-3">
+            {% for task in tasks_completed %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card task-card h-100 border-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0"><a href="{% url 'task_detail' task.id %}">{{ task.title }}</a></h5>
+                                {% if task.priority == 2 %}
+                                    <span class="badge bg-danger priority-badge">High</span>
+                                {% elif task.priority == 1 %}
+                                    <span class="badge bg-warning text-dark priority-badge">Medium</span>
+                                {% else %}
+                                    <span class="badge bg-success priority-badge">Low</span>
+                                {% endif %}
+                            </div>
+                            <p class="card-text">{{ task.description|default:"No description" }}</p>
+                            <p class="card-text"><small class="text-muted">Completed on: {{ task.date_completed|date:"M d, Y" }}</small></p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <p class="text-muted mb-3">No completed tasks yet.</p>
         </div>
     {% endif %}
 </div>

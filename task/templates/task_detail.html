@@ -41,6 +41,11 @@
                             <button type="submit" class="btn btn-success">Mark as Completed</button>
                         {% endif %}
                     </form>
+
+                    <form method="POST" action="{% url 'delete_task' task.id %}" class="mt-3">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete Task</button>
+                    </form>
                 </div>
             </div>
         </div>
