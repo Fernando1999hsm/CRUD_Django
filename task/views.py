@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponse
 from django.db import IntegrityError
+from django.utils import timezone
 from .forms import TaskForm
 from .models import Task
 
@@ -38,7 +39,7 @@ def signup(request):
             })
         
 def task(request):
-    tasks = Task.objects.filter(user=request.user)
+    tasks = Task.objects.filter(user=request.user, date_completed__isnull=True)
     return render(request, 'task.html', {'tasks': tasks})
 
 def create_task(request):
@@ -82,3 +83,29 @@ def signin(request):
         else:
             login(request, user)
             return redirect('task')
+
+def task_detail(request, task_id):
+    task = get_object_or_404(Task, pk=task_id, user=request.user)
+    if request.method == 'POST':
+        try:
+            form = TaskForm(request.POST, instance=task)
+            if form.is_valid():
+                form.save()
+                return redirect('task')
+        except ValueError:
+            form = TaskForm(request.POST, instance=task)
+            return render(request, 'task_detail.html', {'task': task, 'form': form, 'error': 'Error al actualizar la tarea. Por favor, ingrese datos válidos.'})
+    else:
+        form = TaskForm(instance=task)
+    return render(request, 'task_detail.html', {'task': task, 'form': form})
+
+def complete_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id, user=request.user)
+    if request.method == 'POST':
+        if task.date_completed:
+            task.date_completed = None
+        else:
+            task.date_completed = timezone.now()
+        task.save()
+    return redirect('task')
+

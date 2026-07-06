@@ -4,51 +4,46 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="mb-4">{{ task.title }}</h1>
-    <p class="lead">{{ task.description }}</p>
-    <p><strong>Created on:</strong> {{ task.date_created|date:"M d, Y" }}</p>
-    {% if task.date_completed %}
-        <p><strong>Completed on:</strong> {{ task.date_completed|date:"M d, Y" }}</p>
-    {% endif %}
-    <a href="/task" class="btn btn-secondary">Back to Tasks</a>
-</div>
-{% if tasks %}
-        <div class="row g-3">
-            {% for task in tasks %}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card task-card h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title mb-0">{{ task.title }}</h5>
-                                {% if task.priority == 2 %}
-                                    <span class="badge bg-danger priority-badge">High</span>
-                                {% elif task.priority == 1 %}
-                                    <span class="badge bg-warning text-dark priority-badge">Medium</span>
-                                {% else %}
-                                    <span class="badge bg-success priority-badge">Low</span>
-                                {% endif %}
-                            </div>
-                            <p class="card-text">{{ task.description|default:"No description" }}</p>
-                            <p class="card-text"><small class="text-muted">Created on: {{ task.date_created|date:"M d, Y" }}</small></p>
-                            {% if task.date_completed %}
-                                <p class="card-text"><small class="text-muted">Completed on: {{ task.date_completed|date:"M d, Y" }}</small></p>
-                            {% else %}
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="completeTask{{ task.id }}" data-task-id="{{ task.id }}">
-                                    <label class="form-check-label" for="completeTask{{ task.id }}">
-                                        Mark as complete
-                                    </label>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h1 class="h3 mb-0">{{ task.title }}</h1>
+                    {% if task.priority == 2 %}
+                        <span class="badge bg-danger">High</span>
+                    {% elif task.priority == 1 %}
+                        <span class="badge bg-warning text-dark">Medium</span>
+                    {% else %}
+                        <span class="badge bg-success">Low</span>
+                    {% endif %}
                 </div>
-            {% endfor %}
+                <div class="card-body">
+                    <p class="lead">{{ task.description }}</p>
+                    <p><strong>Created on:</strong> {{ task.date_created_at|date:"M d, Y" }}</p>
+                    {% if task.date_completed %}
+                        <p><strong>Completed on:</strong> {{ task.date_completed|date:"M d, Y" }}</p>
+                    {% endif %}
+
+                    <hr>
+                    <h4>Edit Task</h4>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="/task" class="btn btn-secondary">Back to Tasks</a>
+                    </form>
+
+                    <form method="POST" action="{% url 'complete_task' task.id %}" class="mt-3">
+                        {% csrf_token %}
+                        {% if task.date_completed %}
+                            <button type="submit" class="btn btn-warning">Mark as Pending</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-success">Mark as Completed</button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
         </div>
-    {% else %}
-        <div class="text-center py-5">
-            <p class="text-muted mb-3">Task not found.</p>
-            <a href="/task/create" class="btn btn-primary">Create Task</a>
-        </div>
-    {% endif %}
+    </div>
+</div>
 {% endblock %}
