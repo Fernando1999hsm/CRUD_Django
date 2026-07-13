@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+{% load widget_tweaks %}
 {% block title %}Sign In{% endblock %}
 
 {% block content %}
@@ -20,7 +21,7 @@
                             {% for field in form %}
                                 <div class="mb-3">
                                     <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                                    {{ field }}
+                                    {{ field|add_class:"form-control" }}
                                     {% if field.errors %}
                                         <div class="invalid-feedback d-block">
                                             {{ field.errors|join:", " }}

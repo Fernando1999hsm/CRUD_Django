@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 
 {% block title %}Task Detail{% endblock %}
 
@@ -26,9 +27,26 @@
 
                     <hr>
                     <h4>Edit Task</h4>
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endif %}
                     <form method="POST">
                         {% csrf_token %}
-                        {{ form.as_p }}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {% if field.name == 'priority' %}
+                                    {{ field|add_class:"form-select" }}
+                                {% else %}
+                                    {{ field|add_class:"form-control" }}
+                                {% endif %}
+                                {% if field.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ field.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                         <a href="/task" class="btn btn-secondary">Back to Tasks</a>
                     </form>
